@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}CivicBridge — Find Your Benefits{% endblock %}
+{% block content %}
+  <h1>Find Indian government schemes you may qualify for</h1>
+  <p class="lede">CivicBridge screens selected Government of India schemes. It is a discovery tool, not an official eligibility decision.</p>
+
+  <div class="card" style="margin-bottom: 1rem;">
+    <strong>🔄 Live Central Government scheme catalogue</strong>
+    <p class="muted">CivicBridge can refresh scheme metadata from the configured government API/data source.</p>
+    <p class="muted">Currently stored live: <strong>{{ live_count }}</strong> schemes{% if last_sync %} · Last sync: {{ last_sync }}{% endif %} · Curated catalogue: <strong>{{ catalogue_count }}</strong> schemes</p>
+    <form method="POST" action="{{ url_for('sync_schemes') }}">
+      <button type="submit" class="btn-secondary">Refresh schemes now</button>
+    </form>
+    <p><a href="{{ url_for('schemes_catalogue') }}">Browse all Central Government schemes &rarr;</a></p>
+  </div>
+
+  <div class="card country-card">
+    <strong>🇮🇳 Country</strong>
+    <span>India — Central Government only</span>
+    <small>CivicBridge screens Central Government of India schemes only; state government schemes are out of scope.</small>
+  </div>
+
+  <form method="POST" action="{{ url_for('submit_intake') }}" class="card form">
+    <div class="field">
+      <label for="household_size">Household size</label>
+      <input type="number" id="household_size" name="household_size" min="1" max="20" value="1" required>
+    </div>
+
+    <div class="field">
+      <label for="income">Annual household income (₹)</label>
+      <input type="number" id="income" name="income" min="0" step="1000" value="0" required>
+      <small>Approximate combined annual household income.</small>
+    </div>
+
+    <div class="field">
+      <label for="age">Your age</label>
+      <input type="number" id="age" name="age" min="0" max="120" value="30" required>
+    </div>
+
+    <div class="field">
+      <label for="caste">Social category (caste)</label>
+      <select id="caste" name="caste" required>
+        <option value="">Select category</option>
+        <option value="General">General</option>
+        <option value="OBC">OBC (Other Backward Class)</option>
+        <option value="SC">SC (Scheduled Caste)</option>
+        <option value="ST">ST (Scheduled Tribe)</option>
+        <option value="EWS">EWS (Economically Weaker Section)</option>
+        <option value="Other/Prefer not to say">Other / Prefer not to say</option>
+      </select>
+      <small>Several Central Government scholarship, fellowship and enterprise schemes are restricted to specific social categories.</small>
+    </div>
+
+    <div class="field-group">
+      <p class="group-label">Tell us what applies to you:</p>
+      <label class="checkbox-row"><input type="checkbox" name="farmer" value="yes"> I am a farmer / have agricultural land</label>
+      <label class="checkbox-row"><input type="checkbox" name="urban" value="yes"> I live in an urban area</label>
+      <label class="checkbox-row"><input type="checkbox" name="female_applicant" value="yes"> The applicant is a woman</label>
+      <label class="checkbox-row"><input type="checkbox" name="street_vendor" value="yes"> I am a street vendor</label>
+      <label class="checkbox-row"><input type="checkbox" name="business" value="yes"> I run a small business / self-employment activity</label>
+      <label class="checkbox-row"><input type="checkbox" name="disability" value="yes"> I (or the applicant) have a disability</label>
+      <label class="checkbox-row"><input type="checkbox" name="widow" value="yes"> The applicant is a widow</label>
+      <label class="checkbox-row"><input type="checkbox" name="employed" value="yes"> I currently have income from work</label>
+    </div>
+
+    <button type="submit" class="btn-primary">Find Central Government schemes</button>
+  </form>
+
+  <p class="muted">CivicBridge screens Central Government of India schemes only. Every result should still be verified on the linked official portal before you apply.</p>
+{% endblock %}

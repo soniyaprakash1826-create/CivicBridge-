@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Scheme update — CivicBridge{% endblock %}
+{% block content %}
+  <a class="back-link" href="{{ url_for('index') }}">&larr; Back</a>
+  {% if ok %}
+    <h1>🇮🇳 Scheme database updated</h1>
+    <p class="lede">CivicBridge queried the configured government/API data source and stored the latest scheme metadata it could retrieve.</p>
+    <div class="card">
+      <p><strong>{{ result.fetched }}</strong> scheme pages were updated.</p>
+      <p><strong>{{ result.fetched }}</strong> scheme links were discovered.</p>
+      <p class="muted">Last successful sync: {{ last_sync }}</p>
+    </div>
+  {% else %}
+    <h1>Update could not be completed</h1>
+    <p class="lede">The official source may be temporarily unavailable. CivicBridge keeps the last successful catalogue instead of deleting it.</p>
+    <div class="card"><code>{{ error }}</code></div>
+  {% endif %}
+  <a class="btn-secondary" href="{{ url_for('index') }}">Return to CivicBridge</a>
+{% endblock %}

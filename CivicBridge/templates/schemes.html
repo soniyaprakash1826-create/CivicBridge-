@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Browse Central Government schemes — CivicBridge{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('index') }}">&larr; Back</a>
+<h1>🇮🇳 Central Government schemes</h1>
+<p class="lede">
+  {{ catalogue|length }} curated Central Government of India schemes{% if category %} in <strong>{{ category }}</strong>{% endif %},
+  plus {{ live_schemes|length }} from the live-synced catalogue below. This is a discovery list, not an
+  official eligibility determination — always verify current details on the linked official source.
+</p>
+
+<div class="card" style="margin-bottom: 1rem;">
+  <strong>Filter by category</strong>
+  <div class="cards" style="margin-top: .5rem;">
+    <a class="btn-secondary" href="{{ url_for('schemes_catalogue') }}">All</a>
+    {% for c in categories %}
+      <a class="btn-secondary" href="{{ url_for('schemes_catalogue', category=c) }}">{{ c }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="cards">
+  {% for s in catalogue %}
+  <article class="card">
+    <h2>{{ s.name }}</h2>
+    <p class="muted">{{ s.category }} · {{ s.ministry }} · 🇮🇳 Central Government</p>
+    <p>{{ s.description }}</p>
+    <a href="{{ s.official_url }}" target="_blank" rel="noopener">Official government source ↗</a>
+  </article>
+  {% endfor %}
+</div>
+
+{% if live_schemes %}
+<section class="card" style="margin-top: 1.5rem;">
+  <h2>🔄 Live-synced Central Government schemes</h2>
+  <p class="muted">Last sync: {{ last_sync or "Not synced yet" }}. These come from the configured live data source (see API_SETUP.md).</p>
+  {% for s in live_schemes %}
+    <div class="scheme-row">
+      <h3>{{ s.name }}</h3>
+      <p>{{ s.description }}</p>
+      <small>{{ s.category }} · {{ s.source }}</small><br>
+      <a href="{{ s.official_url }}" target="_blank" rel="noopener">Official source ↗</a>
+    </div>
+  {% endfor %}
+</section>
+{% endif %}
+{% endblock %}

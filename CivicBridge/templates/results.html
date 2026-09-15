@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Your results — CivicBridge{% endblock %}
+{% block content %}
+  <a class="back-link" href="{{ url_for('index') }}">&larr; Start over</a>
+  <h1>Your results</h1>
+  <p class="lede">
+    Based on what you shared, you may qualify for <strong>{{ eligible_count }}</strong>
+    of {{ matches|length }} programs we screened. Click any program to see the exact
+    documents you'll need and the reasons applications like yours commonly get rejected.
+  </p>
+
+  <div class="case-id-note">Your case reference: <code>{{ case_id }}</code> — bookmark this page to come back later.</div>
+
+  <div class="card" style="margin-bottom: 1rem;">
+    <strong>🔄 Live catalogue</strong>
+    <p class="muted">Last scheme catalogue sync: {{ last_sync or "Not synced yet" }}. Newly discovered schemes are shown below for official verification.</p>
+    <form method="POST" action="{{ url_for('sync_schemes') }}"><button type="submit" class="btn-secondary">Refresh live catalogue</button></form>
+  </div>
+
+  <div class="program-list">
+    {% for m in matches %}
+      <div class="program-card {{ 'eligible' if m.eligible else 'not-eligible' }}">
+        <div class="program-card-header">
+          <h2>{{ m.name }}</h2>
+          <span class="badge {{ 'badge-yes' if m.eligible else 'badge-no' }}">
+            {{ 'Likely eligible' if m.eligible else 'Likely not eligible' }}
+          </span>
+        </div>
+        <p class="program-desc">{{ m.desc }}</p>
+        <p class="muted"><strong>Category:</strong> {{ m.category }} · 🇮🇳 India</p>
+        <p class="program-reason">{{ m.reason }}</p>
+        {% if m.eligible %}
+          <a class="btn-secondary" href="{{ url_for('checklist', case_id=case_id, program_id=m.id) }}">
+            Start document checklist &rarr;
+          </a>
+        {% endif %}
+        <p><a href="{{ m.official_url }}" target="_blank" rel="noopener">Official government information ↗</a></p>
+      </div>
+    {% endfor %}
+  </div>
+
+
+  {% if api_schemes %}
+  <section class="card">
+    <h2>🔄 More live-synced Central Government schemes</h2>
+    <p class="muted">These come from the configured live data source, in addition to the personalised matches above.</p>
+    {% for s in api_schemes %}
+      <div class="scheme-row">
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.description }}</p>
+        <small>{{ s.category }} · {{ s.source }}</small><br>
+        <a href="{{ s.official_url }}" target="_blank" rel="noopener">Official source ↗</a>
+      </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <p><a href="{{ url_for('schemes_catalogue') }}">Browse the full Central Government schemes catalogue &rarr;</a></p>
+{% endblock %}

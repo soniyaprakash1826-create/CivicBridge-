@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ program.name }} checklist — CivicBridge{% endblock %}
+{% block content %}
+  <a class="back-link" href="{{ url_for('results', case_id=case_id) }}">&larr; Back to all results</a>
+  <h1>{{ program.name }}</h1>
+  <p class="lede">{{ program.desc }}</p>
+  <p><a href="{{ program.official_url }}" target="_blank" rel="noopener">Open official government source ↗</a></p>
+
+  <div class="readiness-bar-wrap">
+    <div class="readiness-label">Document readiness: {{ readiness_pct }}%</div>
+    <div class="readiness-bar">
+      <div class="readiness-fill" style="width: {{ readiness_pct }}%;"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Documents to gather</h2>
+    <p class="muted">Check off each item as you gather it. Progress is saved automatically.</p>
+    {% for doc in docs %}
+      <form method="POST" action="{{ url_for('toggle_doc', case_id=case_id, program_id=program.id) }}" class="doc-row-form">
+        <input type="hidden" name="doc_name" value="{{ doc.name }}">
+        <input type="hidden" name="checked" value="{{ 'false' if doc.checked else 'true' }}">
+        <button type="submit" class="doc-row {{ 'checked' if doc.checked else '' }}">
+          <span class="checkbox-icon">{{ '✓' if doc.checked else '' }}</span>
+          <span>{{ doc.name }}</span>
+        </button>
+      </form>
+    {% endfor %}
+  </div>
+
+  <div class="card warning-card">
+    <h2>⚠️ Why applications like this commonly get rejected</h2>
+    <ul>
+      {% for reason in program.rejection_reasons %}
+        <li>{{ reason }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card apply-card">
+    <h2>How to apply</h2>
+    <p>{{ program.apply_note }}</p>
+    {% if readiness_pct == 100 %}
+      <p class="ready-msg">✅ You've checked off every document on this list — you're ready to apply.</p>
+    {% else %}
+      <p class="not-ready-msg">Gather the remaining documents above before you submit, to reduce the chance of a paperwork rejection.</p>
+    {% endif %}
+  </div>
+{% endblock %}

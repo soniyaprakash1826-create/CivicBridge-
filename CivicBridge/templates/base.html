@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CivicBridge{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a href="{{ url_for('index') }}" class="brand">🌉 CivicBridge</a>
+    <span class="tagline">Bridging Indians to Central Government schemes</span>
+    <nav class="topnav"><a href="{{ url_for('schemes_catalogue') }}">Browse all schemes</a></nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <p>India-only prototype. Not an official eligibility determination. Always verify details on the linked Government of India portal before applying.</p>
+  </footer>
+</body>
+</html>

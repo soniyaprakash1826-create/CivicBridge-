@@ -43,22 +43,23 @@ The application collects basic information about a citizen and their household, 
 
 ```text
 CivicBridge/
-│
 ├── app.py
 ├── benefits_data.py
+├── central_schemes_catalogue.py
 ├── scheme_api.py
-├── schemes_catalogue.py
 ├── civicbridge.db
 ├── requirements.txt
+├── .env.example
+├── API_SETUP.md
+├── README_INDIA.md
+├── TEST_REPORT.md
 ├── README.md
-│
 ├── templates/
 │   ├── base.html
 │   ├── index.html
 │   ├── results.html
 │   ├── schemes.html
 │   └── checklist.html
-│
 └── static/
     ├── css/
     └── js/
